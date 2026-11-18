@@ -346,6 +346,7 @@ dialog form{display:flex;flex-direction:column;max-height:88vh}
 }
 .ed-foot .save{background:var(--bamboo);margin-left:auto}
 .ed-foot .del{background:var(--coral)}
+.flight .fnote{margin-top:12px;border-top:2.5px dashed var(--ink);padding-top:10px;font-size:14px;white-space:pre-line}
 .share-card{margin-top:14px;border:var(--line);border-radius:var(--r-md);padding:12px;background:var(--sky);text-align:center}
 .share-card p{font-size:14px}
 .share-card .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}
@@ -735,7 +736,7 @@ function fieldHTML(f, v){
   if(f.type === "textarea"){
     return `<label class="fld" for="${id}">${f.l}<textarea id="${id}" name="${f.k}" placeholder="${esc(f.ph||"")}">${esc(v||"")}</textarea>${hint}</label>`;
   }
-  return `<label class="fld${half}" for="${id}">${f.l}<input id="${id}" name="${f.k}" type="${f.type||"text"}" value="${esc(v||"")}" placeholder="${esc(f.ph||"")}" autocomplete="off">${hint}</label>`;
+  return `<label class="fld${half}" for="${id}">${f.l}<input id="${id}" name="${f.k}" type="${f.type||"text"}"${/Code$/.test(f.k)?' autocapitalize="characters"':''} value="${esc(v||"")}" placeholder="${esc(f.ph||"")}" autocomplete="off">${hint}</label>`;
 }
 
 function openEditor(opts){
@@ -779,20 +780,14 @@ const F_TRIP = [
   {k:"note", l:"小提醒", type:"textarea", ph:"例：當地氣溫、記得帶的東西"}
 ];
 const F_FLIGHT = [
-  {k:"kind", l:"類型", type:"select", half:true, options:[{v:"去程",l:"去程"},{v:"回程",l:"回程"},{v:"轉機",l:"轉機"},{v:"國內線",l:"國內線"}]},
+  {k:"kind", l:"去程或回程", type:"select", half:true, options:[{v:"去程",l:"去程"},{v:"回程",l:"回程"},{v:"轉機",l:"轉機"},{v:"國內線",l:"國內線"}]},
   {k:"date", l:"日期", type:"date", half:true},
-  {k:"air", l:"航空公司", half:true, ph:"例：中華航空"},
-  {k:"no", l:"航班編號", half:true, ph:"例：CI 152"},
-  {k:"fromCode", l:"出發機場代碼", half:true, ph:"TPE"},
+  {k:"no", l:"航班編號", ph:"例：CI 152"},
+  {k:"fromCode", l:"從哪裡飛", half:true, ph:"例：TPE"},
   {k:"fromTime", l:"起飛時間", type:"time", half:true},
-  {k:"fromCity", l:"出發航廈", ph:"例：桃園 第一航廈"},
-  {k:"toCode", l:"抵達機場代碼", half:true, ph:"KIX"},
+  {k:"toCode", l:"飛到哪裡", half:true, ph:"例：KIX"},
   {k:"toTime", l:"抵達時間", type:"time", half:true},
-  {k:"toCity", l:"抵達航廈", ph:"例：關西 第一航廈"},
-  {k:"dur", l:"飛行時間", half:true, ph:"2 小時 40 分"},
-  {k:"seat", l:"座位", half:true, ph:"34A"},
-  {k:"bag", l:"託運行李", half:true, ph:"23kg × 1"},
-  {k:"code", l:"訂位代號", half:true, ph:"ABC123"}
+  {k:"note", l:"備註（選填）", type:"textarea", ph:"座位、行李、訂位代號，有需要再寫"}
 ];
 const F_DAY = [
   {k:"date", l:"日期", type:"date", half:true},
@@ -846,6 +841,10 @@ function renderHero(){
 }
 
 /* ===================== 航班 ===================== */
+function flightNote(f){
+  const old = [f.seat && "座位 "+f.seat, f.bag && "行李 "+f.bag, f.code && "訂位代號 "+f.code].filter(Boolean).join("・");
+  return [f.note, old].filter(Boolean).join("\n");
+}
 function renderFlights(){
   const el = document.getElementById("flights");
   if(!data.flights.length){
@@ -873,11 +872,7 @@ function renderFlights(){
       </div>
       <div class="end"><div class="code">${dash(f.toCode)}</div><div class="time">${dash(f.toTime)}</div><div class="city">${esc(f.toCity)}</div></div>
     </div>
-    <div class="meta">
-      <div>座位<b>${dash(f.seat)}</b></div>
-      <div>託運行李<b>${dash(f.bag)}</b></div>
-      <div>訂位代號<b>${dash(f.code)}</b></div>
-    </div>
+    ${flightNote(f) ? `<p class="fnote">${esc(flightNote(f))}</p>` : ""}
   </article>`).join("");
 }
 
