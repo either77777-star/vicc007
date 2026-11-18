@@ -1,0 +1,1212 @@
+<!doctype html>
+<html lang="zh-Hant-TW">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>旅行繪本手帳</title>
+<meta name="theme-color" content="#FFFCF6">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Huninn&display=swap" rel="stylesheet">
+<style>
+:root{
+  --paper:#FFFCF6;
+  --ink:#3E3A39;
+  --coral:#F2A497;
+  --yellow:#F6D27A;
+  --water:#A8D3E6;
+  --bamboo:#B9DAA5;
+  --sky:#E6F2F7;
+  --line:3px solid var(--ink);
+  --r-lg:28px;
+  --r-md:18px;
+  --r-sm:999px;
+  --nav-h:60px;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;-webkit-text-size-adjust:100%}
+body{
+  background:var(--paper);color:var(--ink);
+  font-family:"Huninn","PingFang TC","Microsoft JhengHei",system-ui,sans-serif;
+  font-size:16px;line-height:1.6;
+  padding-top:calc(var(--nav-h) + env(safe-area-inset-top));
+}
+a{color:inherit}
+button{font:inherit;color:inherit}
+svg{display:block}
+
+/* ---------- 頂端選單 ---------- */
+.nav{
+  position:fixed;top:0;left:0;right:0;z-index:50;
+  background:var(--paper);border-bottom:var(--line);
+  padding-top:env(safe-area-inset-top);
+}
+.nav-inner{
+  max-width:640px;margin:0 auto;height:var(--nav-h);
+  display:flex;align-items:center;gap:8px;padding:0 12px;
+  overflow-x:auto;scrollbar-width:none;
+}
+.nav-inner::-webkit-scrollbar{display:none}
+.nav a{
+  flex:0 0 auto;text-decoration:none;
+  padding:6px 14px;border:var(--line);border-radius:var(--r-sm);
+  background:var(--paper);font-size:15px;white-space:nowrap;
+  transition:transform .15s;
+}
+.nav a:active{transform:scale(.95)}
+.nav a.on{background:var(--yellow)}
+
+main{max-width:640px;margin:0 auto;padding:16px 16px 40px}
+section{scroll-margin-top:calc(var(--nav-h) + 16px);margin-bottom:36px}
+
+.card{
+  background:var(--paper);border:var(--line);border-radius:var(--r-lg);
+  padding:18px;
+}
+.sec-title{
+  display:flex;align-items:center;gap:10px;
+  font-size:22px;margin-bottom:14px;
+}
+.sec-title .badge{
+  width:42px;height:42px;border:var(--line);border-radius:50%;
+  display:grid;place-items:center;flex:0 0 auto;
+}
+.sec-sub{font-size:14px;margin:-8px 0 14px 52px;opacity:.75}
+
+/* ---------- 首頁 ---------- */
+.hero{padding:0;overflow:hidden}
+.hero-art{background:var(--sky);border-bottom:var(--line)}
+.hero-art svg{width:100%;height:auto}
+.hero-body{padding:18px 18px 20px;text-align:center}
+.hero-tag{
+  display:inline-block;padding:2px 12px;border:var(--line);border-radius:var(--r-sm);
+  background:var(--bamboo);font-size:14px;margin-bottom:8px;
+}
+.hero h1{font-size:30px;line-height:1.3;letter-spacing:1px}
+.hero .date{margin-top:4px;font-size:16px}
+.count{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin-top:16px}
+.count div{
+  border:var(--line);border-radius:var(--r-md);padding:8px 4px;
+}
+.count div:nth-child(1){background:var(--coral)}
+.count div:nth-child(2){background:var(--yellow)}
+.count div:nth-child(3){background:var(--water)}
+.count div:nth-child(4){background:var(--bamboo)}
+.count b{display:block;font-size:28px;font-weight:400;line-height:1.2;font-variant-numeric:tabular-nums}
+.count span{font-size:13px}
+.count-note{margin-top:12px;font-size:14px}
+.weather{
+  display:flex;gap:10px;align-items:center;justify-content:center;
+  margin-top:14px;font-size:14px;
+}
+
+/* ---------- 航班 ---------- */
+.flights{display:grid;gap:14px}
+.flight{position:relative;overflow:hidden}
+.flight .head{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px}
+.pill{
+  display:inline-block;padding:2px 12px;border:2.5px solid var(--ink);border-radius:var(--r-sm);
+  font-size:14px;line-height:1.5;
+}
+.route{display:grid;grid-template-columns:1fr auto 1fr;align-items:center;gap:6px}
+.route .end{text-align:center}
+.route .code{font-size:34px;line-height:1.1;letter-spacing:2px}
+.route .time{font-size:20px}
+.route .city{font-size:13px}
+.route .mid{width:110px}
+.flight .meta{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:14px;
+  border-top:2.5px dashed var(--ink);padding-top:12px;font-size:13px;text-align:center;
+}
+.flight .meta b{display:block;font-size:16px;font-weight:400}
+
+/* ---------- 每日行程 ---------- */
+.days{
+  display:flex;gap:8px;overflow-x:auto;padding:4px 2px 10px;margin:0 -2px 6px;
+  scrollbar-width:none;
+}
+.days::-webkit-scrollbar{display:none}
+.day-btn{
+  flex:0 0 auto;min-width:72px;border:var(--line);border-radius:var(--r-md);
+  background:var(--paper);padding:6px 10px;text-align:center;cursor:pointer;
+  transition:transform .15s;
+}
+.day-btn small{display:block;font-size:12px}
+.day-btn b{display:block;font-size:20px;font-weight:400;line-height:1.2}
+.day-btn[aria-selected="true"]{background:var(--coral);transform:translateY(-3px)}
+.day-btn:active{transform:scale(.94)}
+
+.day-panel .banner{
+  display:flex;align-items:center;gap:12px;
+  background:var(--sky);border:var(--line);border-radius:var(--r-md);
+  padding:10px 14px;margin-bottom:16px;
+}
+.day-panel .banner svg{flex:0 0 auto;width:64px;height:64px}
+.day-panel .banner h3{font-size:19px;font-weight:400;line-height:1.35}
+.day-panel .banner p{font-size:13px}
+
+.timeline{list-style:none;position:relative;padding-left:26px}
+.timeline::before{
+  content:"";position:absolute;left:8px;top:8px;bottom:8px;
+  border-left:3px dashed var(--ink);
+}
+.tl{position:relative;margin-bottom:14px}
+.tl::before{
+  content:"";position:absolute;left:-26px;top:16px;width:14px;height:14px;
+  border:var(--line);border-radius:50%;background:var(--paper);
+}
+.tl.must::before{background:var(--coral)}
+.tl .box{border:var(--line);border-radius:var(--r-md);padding:10px 14px;background:var(--paper)}
+.tl.must .box{background:#FDEEEA}
+.tl .top{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.tl .t{font-size:15px;font-variant-numeric:tabular-nums}
+.tl .h4{display:block;font-size:17px;margin-top:2px}
+.tl .pp{display:block;font-size:14px;margin-top:2px}
+.tl .top{display:flex}
+.tag{
+  display:inline-block;padding:0 10px;border:2px solid var(--ink);border-radius:var(--r-sm);
+  font-size:13px;line-height:1.7;
+}
+.tag.plane{background:var(--water)}
+.tag.train{background:var(--bamboo)}
+.tag.metro{background:#D7ECC9}
+.tag.bus{background:var(--yellow)}
+.tag.walk{background:#FBD9D2}
+.tag.taxi{background:var(--paper)}
+.must-badge{
+  display:inline-flex;align-items:center;gap:3px;
+  padding:0 10px;border:2px solid var(--ink);border-radius:var(--r-sm);
+  background:var(--coral);font-size:13px;line-height:1.7;
+}
+.legend{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;font-size:13px}
+
+/* ---------- 清單 ---------- */
+.list{list-style:none;display:grid;gap:8px}
+.check{
+  display:flex;align-items:flex-start;gap:12px;cursor:pointer;
+  border:2.5px solid var(--ink);border-radius:var(--r-md);padding:10px 12px;background:var(--paper);
+  transition:background .2s;
+}
+.check input{position:absolute;opacity:0;pointer-events:none}
+.check .box{
+  flex:0 0 auto;width:26px;height:26px;border:var(--line);border-radius:9px;
+  display:grid;place-items:center;background:var(--paper);margin-top:1px;
+}
+.check .box svg{opacity:0;transform:scale(.4);transition:opacity .15s,transform .2s}
+.check input:checked + .box{background:var(--bamboo)}
+.check input:checked + .box svg{opacity:1;transform:scale(1)}
+.check input:checked ~ .txt{text-decoration:line-through;text-decoration-thickness:2px;opacity:.55}
+.check input:focus-visible + .box{outline:3px solid var(--water);outline-offset:2px}
+.check .txt small{display:block;font-size:13px}
+.progress{display:flex;align-items:center;gap:10px;margin-bottom:12px;font-size:14px}
+.bar{flex:1;height:16px;border:var(--line);border-radius:var(--r-sm);overflow:hidden;background:var(--paper)}
+.bar i{display:block;height:100%;width:0;background:var(--yellow);border-right:3px solid var(--ink);transition:width .35s}
+.bar i.zero{border-right:0}
+.group-title{font-size:17px;margin:16px 0 8px;display:flex;align-items:center;gap:8px}
+.group-title::before{content:"";width:12px;height:12px;border:2.5px solid var(--ink);border-radius:50%;background:var(--dot,var(--coral))}
+
+/* ---------- 住宿 ---------- */
+.hotels{display:grid;gap:14px}
+.hotel{display:grid;grid-template-columns:72px 1fr;gap:14px;align-items:start}
+.hotel .pic{border:var(--line);border-radius:var(--r-md);background:var(--sky);overflow:hidden}
+.hotel h3{font-size:18px;font-weight:400;line-height:1.35}
+.hotel dl{display:grid;grid-template-columns:auto 1fr;gap:2px 10px;font-size:14px;margin-top:6px}
+.hotel dt{opacity:.7}
+.hotel .btn{
+  display:inline-block;margin-top:10px;padding:4px 14px;border:var(--line);border-radius:var(--r-sm);
+  background:var(--water);text-decoration:none;font-size:14px;
+}
+
+.sub-title{font-size:19px;margin:24px 0 10px}
+
+footer{text-align:center;font-size:13px;padding:10px 16px 30px}
+footer svg{margin:0 auto 8px}
+.motion-toggle{
+  margin-top:10px;border:var(--line);border-radius:var(--r-sm);background:var(--paper);
+  padding:4px 14px;font-size:14px;cursor:pointer;
+}
+
+/* ---------- 動畫 ---------- */
+@keyframes drift{from{transform:translateX(-10px)}to{transform:translateX(14px)}}
+@keyframes bob{0%,100%{transform:translateY(0)}50%{transform:translateY(-4px)}}
+@keyframes sway{0%,100%{transform:rotate(-4deg)}50%{transform:rotate(4deg)}}
+@keyframes spin{to{transform:rotate(360deg)}}
+@keyframes ride{from{transform:translateX(-190px)}to{transform:translateX(380px)}}
+@keyframes fly{0%,100%{transform:translate(0,0) rotate(-6deg)}50%{transform:translate(0,-5px) rotate(4deg)}}
+@keyframes pop{
+  0%{opacity:0;transform:translateY(14px) scale(.92)}
+  55%{opacity:1;transform:translateY(-6px) scale(1.03)}
+  75%{transform:translateY(2px) scale(.99)}
+  100%{opacity:1;transform:none}
+}
+.a-drift{animation:drift 5s ease-in-out infinite alternate}
+.a-drift.slow{animation-duration:7s;animation-delay:-2s}
+.a-bob{animation:bob 3s ease-in-out infinite}
+.a-sway{animation:sway 2.6s ease-in-out infinite;transform-box:fill-box;transform-origin:50% 0}
+.a-spin{animation:spin 30s linear infinite;transform-box:fill-box;transform-origin:center}
+.a-ride{animation:ride 13s linear infinite}
+.a-fly{animation:fly 2.4s ease-in-out infinite;transform-box:fill-box;transform-origin:center}
+.bounce > *{animation:pop .55s cubic-bezier(.3,1.4,.5,1) both}
+.bounce > *:nth-child(2){animation-delay:.05s}
+.bounce > *:nth-child(3){animation-delay:.1s}
+.bounce > *:nth-child(4){animation-delay:.15s}
+.bounce > *:nth-child(5){animation-delay:.2s}
+.bounce > *:nth-child(6){animation-delay:.25s}
+.bounce > *:nth-child(7){animation-delay:.3s}
+.bounce > *:nth-child(n+8){animation-delay:.35s}
+.banner.bounce-one{animation:pop .5s cubic-bezier(.3,1.4,.5,1) both}
+
+/* 減少動態效果：跟隨系統設定，也可手動切換 */
+@media (prefers-reduced-motion: reduce){
+  html{scroll-behavior:auto}
+  *,*::before,*::after{animation:none !important;transition:none !important}
+  .a-ride{transform:translateX(70px)}
+}
+html.reduce{scroll-behavior:auto}
+html.reduce *,html.reduce *::before,html.reduce *::after{animation:none !important;transition:none !important}
+html.reduce .a-ride{transform:translateX(70px)}
+
+@media (min-width:560px){
+  .hero h1{font-size:36px}
+  .flights{grid-template-columns:1fr}
+}
+
+/* ---------- 編輯功能 ---------- */
+.add-btn{
+  display:flex;align-items:center;justify-content:center;gap:6px;width:100%;
+  border:3px dashed var(--ink);border-radius:var(--r-md);background:var(--paper);
+  padding:10px;font-size:16px;cursor:pointer;margin-top:12px;
+}
+.add-btn:active{transform:scale(.98)}
+.edit-btn{
+  border:2.5px solid var(--ink);border-radius:var(--r-sm);background:var(--paper);
+  padding:2px 12px;font-size:14px;cursor:pointer;flex:0 0 auto;
+}
+.edit-btn.big{padding:5px 16px;font-size:15px;background:var(--yellow);margin-top:14px}
+.empty{
+  border:3px dashed var(--ink);border-radius:var(--r-lg);padding:18px;text-align:center;font-size:15px;
+}
+.empty small{display:block;font-size:13px;margin-top:2px}
+.flight .head{gap:8px}
+.flight .head .right{display:flex;align-items:center;gap:8px}
+.day-btn.plus{min-width:56px;border-style:dashed;font-size:26px;line-height:1}
+.banner .grow{flex:1;min-width:0}
+.banner .acts{display:flex;flex-direction:column;gap:6px}
+.tl .box{cursor:pointer;width:100%;text-align:left;font:inherit;color:inherit}
+.tl .box:focus-visible{outline:3px solid var(--water);outline-offset:2px}
+.tl .edit-hint{margin-left:auto;font-size:12px;opacity:.6}
+.list li{display:flex;gap:6px;align-items:stretch}
+.list li .check{flex:1;min-width:0}
+.list li .edit-btn{border-radius:var(--r-md);padding:0 10px}
+.add-row{display:flex;gap:8px;margin-top:10px}
+.add-row input{flex:1;min-width:0}
+.add-row button{
+  border:var(--line);border-radius:var(--r-md);background:var(--bamboo);padding:0 16px;cursor:pointer;font-size:15px;
+}
+.empty-line{font-size:14px;opacity:.65;padding:4px 2px}
+.hero .sub{font-size:16px;margin-top:2px}
+.tools{display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin-top:10px}
+.tools button,.tools label{
+  border:var(--line);border-radius:var(--r-sm);background:var(--paper);
+  padding:4px 14px;font-size:14px;cursor:pointer;
+}
+.tools input{display:none}
+
+input[type=text],input[type=date],input[type=time],input[type=datetime-local],select,textarea{
+  width:100%;font:inherit;font-size:16px;color:var(--ink);background:var(--paper);
+  border:2.5px solid var(--ink);border-radius:12px;padding:8px 10px;min-height:44px;
+}
+textarea{min-height:70px;resize:vertical}
+input:focus,select:focus,textarea:focus{outline:3px solid var(--water);outline-offset:1px}
+
+dialog{
+  border:var(--line);border-radius:var(--r-lg);background:var(--paper);color:var(--ink);
+  padding:0;width:min(560px,calc(100% - 24px));max-height:88vh;margin:auto;
+}
+dialog[open]{animation:pop .4s cubic-bezier(.3,1.4,.5,1) both}
+dialog::backdrop{background:rgba(62,58,57,.35)}
+dialog form{display:flex;flex-direction:column;max-height:88vh}
+.ed-head{padding:14px 18px;border-bottom:var(--line);font-size:19px;background:var(--yellow)}
+.ed-body{padding:16px 18px;overflow:auto;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.fld{display:flex;flex-direction:column;gap:4px;font-size:14px;grid-column:span 2;border:0;min-width:0}
+.fld.half{grid-column:span 1}
+.fld legend{margin-bottom:4px}
+.fld .hint{font-size:12px;opacity:.65}
+.fld-row{display:flex;align-items:center;gap:10px;font-size:15px;grid-column:span 2;cursor:pointer}
+.fld-row input{width:22px;height:22px;accent-color:var(--coral)}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{cursor:pointer}
+.chip input{position:absolute;opacity:0;pointer-events:none}
+.chip .tag{font-size:15px;padding:2px 12px;opacity:.45}
+.chip input:checked + .tag{opacity:1;box-shadow:0 0 0 2px var(--ink)}
+.chip input:focus-visible + .tag{outline:3px solid var(--water);outline-offset:2px}
+.ed-foot{display:flex;gap:8px;padding:12px 18px;border-top:var(--line)}
+.ed-foot button{
+  border:var(--line);border-radius:var(--r-sm);padding:6px 16px;font-size:15px;cursor:pointer;background:var(--paper);
+}
+.ed-foot .save{background:var(--bamboo);margin-left:auto}
+.ed-foot .del{background:var(--coral)}
+.share-card{margin-top:14px;border:var(--line);border-radius:var(--r-md);padding:12px;background:var(--sky);text-align:center}
+.share-card p{font-size:14px}
+.share-card .row{display:flex;gap:8px;justify-content:center;flex-wrap:wrap;margin-top:8px}
+.share-card button{border:var(--line);border-radius:var(--r-sm);padding:5px 16px;background:var(--yellow);cursor:pointer;font-size:15px}
+.share-card input{margin-top:8px;font-size:13px}
+.share-banner{
+  position:sticky;top:calc(var(--nav-h) + env(safe-area-inset-top, 0px) + 8px);z-index:40;
+  border:var(--line);border-radius:var(--r-md);background:var(--yellow);padding:10px 14px;margin-bottom:14px;font-size:15px;
+}
+.share-banner .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
+.share-banner button{border:2.5px solid var(--ink);border-radius:var(--r-sm);padding:3px 14px;background:var(--paper);cursor:pointer;font-size:14px}
+.share-banner button.yes{background:var(--bamboo)}
+.share-msg{font-size:13px;margin-top:6px;min-height:1em}
+</style>
+</head>
+<body>
+
+<nav class="nav" aria-label="主選單">
+  <div class="nav-inner">
+    <a href="#home" class="on">首頁</a>
+    <a href="#flight">航班</a>
+    <a href="#plan">每日行程</a>
+    <a href="#todo">待辦・住宿</a>
+    <a href="#before">出發前</a>
+    <a href="#pack">行李</a>
+  </div>
+</nav>
+
+<main>
+<div class="share-banner" id="share-banner" hidden>
+  <div>這是同伴分享給你的行程。</div>
+  <div class="row">
+    <button type="button" class="yes" id="share-keep">存到我的手機</button>
+    <button type="button" id="share-dismiss">只看，不存</button>
+  </div>
+</div>
+
+<!-- ============ 首頁 ============ -->
+<section id="home">
+  <div class="card hero">
+    <div class="hero-art" aria-hidden="true">
+      <svg viewBox="0 0 360 250" role="img">
+        <!-- 太陽 -->
+        <g class="a-spin">
+          <g stroke="#3E3A39" stroke-width="3" stroke-linecap="round">
+            <line x1="298" y1="14" x2="298" y2="22"/><line x1="298" y1="88" x2="298" y2="96"/>
+            <line x1="257" y1="55" x2="265" y2="55"/><line x1="331" y1="55" x2="339" y2="55"/>
+            <line x1="269" y1="26" x2="275" y2="32"/><line x1="321" y1="78" x2="327" y2="84"/>
+            <line x1="327" y1="26" x2="321" y2="32"/><line x1="275" y1="78" x2="269" y2="84"/>
+          </g>
+        </g>
+        <circle cx="298" cy="55" r="22" fill="#F6D27A" stroke="#3E3A39" stroke-width="3"/>
+        <circle cx="291" cy="52" r="2.2" fill="#3E3A39"/><circle cx="305" cy="52" r="2.2" fill="#3E3A39"/>
+        <path d="M292 60 Q298 65 304 60" fill="none" stroke="#3E3A39" stroke-width="2.5" stroke-linecap="round"/>
+        <circle cx="286" cy="59" r="3" fill="#F2A497"/><circle cx="310" cy="59" r="3" fill="#F2A497"/>
+
+        <!-- 雲 -->
+        <g class="a-drift">
+          <path d="M40 58 Q28 58 30 48 Q32 40 42 42 Q46 30 60 32 Q72 28 76 40 Q88 40 86 50 Q86 58 78 58 Z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+        </g>
+        <g class="a-drift slow">
+          <path d="M176 36 Q166 36 168 28 Q170 22 178 24 Q182 14 194 16 Q204 13 207 23 Q217 23 215 31 Q215 36 208 36 Z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+        </g>
+
+        <!-- 山 -->
+        <path d="M-4 196 Q50 140 120 182 Q190 128 270 172 Q320 150 364 168 V250 H-4 Z" fill="#B9DAA5" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+        <path d="M150 160 Q162 150 172 156" fill="none" stroke="#3E3A39" stroke-width="2.5" stroke-linecap="round"/>
+        <path d="M300 160 Q310 154 318 158" fill="none" stroke="#3E3A39" stroke-width="2.5" stroke-linecap="round"/>
+
+        <!-- 五重塔 -->
+        <g stroke="#3E3A39" stroke-width="3" stroke-linejoin="round">
+          <line x1="105" y1="88" x2="105" y2="52"/>
+          <circle cx="105" cy="78" r="3.5" fill="#F6D27A"/>
+          <circle cx="105" cy="69" r="3.5" fill="#F6D27A"/>
+          <circle cx="105" cy="60" r="3.5" fill="#F6D27A"/>
+          <rect x="85" y="196" width="40" height="18" fill="#F2A497"/>
+          <rect x="87.5" y="170" width="35" height="20" fill="#F2A497"/>
+          <rect x="90" y="144" width="30" height="20" fill="#F2A497"/>
+          <rect x="92.5" y="118" width="25" height="20" fill="#F2A497"/>
+          <rect x="95" y="92" width="20" height="20" fill="#F2A497"/>
+          <path d="M69 198 Q79 196 83 188 H127 Q131 196 141 198 Z" fill="#3E3A39"/>
+          <path d="M73 172 Q83 170 87 162 H123 Q127 170 137 172 Z" fill="#3E3A39"/>
+          <path d="M77 146 Q87 144 91 136 H119 Q123 144 133 146 Z" fill="#3E3A39"/>
+          <path d="M81 120 Q91 118 95 110 H115 Q119 118 129 120 Z" fill="#3E3A39"/>
+          <path d="M85 94 Q95 92 99 84 H111 Q115 92 125 94 Z" fill="#3E3A39"/>
+        </g>
+        <g fill="#FFFCF6">
+          <rect x="101" y="200" width="8" height="10" rx="1"/>
+          <rect x="101" y="175" width="8" height="10" rx="1"/>
+          <rect x="101" y="149" width="8" height="10" rx="1"/>
+          <rect x="101" y="123" width="8" height="10" rx="1"/>
+        </g>
+        <!-- 燈籠 -->
+        <g class="a-sway">
+          <line x1="134" y1="198" x2="134" y2="204" stroke="#3E3A39" stroke-width="2.5"/>
+          <rect x="128" y="204" width="12" height="15" rx="5" fill="#F6D27A" stroke="#3E3A39" stroke-width="2.5"/>
+        </g>
+
+        <!-- 鳥居 -->
+        <g stroke="#3E3A39" stroke-width="3" stroke-linejoin="round">
+          <rect x="231" y="150" width="8" height="64" fill="#F2A497"/>
+          <rect x="263" y="150" width="8" height="64" fill="#F2A497"/>
+          <rect x="224" y="162" width="54" height="7" fill="#F2A497"/>
+          <rect x="248" y="150" width="6" height="12" fill="#F2A497"/>
+          <path d="M214 142 Q251 150 288 142 L285 152 Q251 158 217 152 Z" fill="#3E3A39"/>
+        </g>
+
+        <!-- 地面 -->
+        <rect x="-4" y="212" width="368" height="42" fill="#F6D27A" stroke="#3E3A39" stroke-width="3"/>
+        <!-- 鐵軌 -->
+        <line x1="0" y1="240" x2="360" y2="240" stroke="#3E3A39" stroke-width="3"/>
+        <g stroke="#3E3A39" stroke-width="3" stroke-linecap="round">
+          <line x1="10" y1="240" x2="10" y2="246"/><line x1="40" y1="240" x2="40" y2="246"/>
+          <line x1="70" y1="240" x2="70" y2="246"/><line x1="100" y1="240" x2="100" y2="246"/>
+          <line x1="130" y1="240" x2="130" y2="246"/><line x1="160" y1="240" x2="160" y2="246"/>
+          <line x1="190" y1="240" x2="190" y2="246"/><line x1="220" y1="240" x2="220" y2="246"/>
+          <line x1="250" y1="240" x2="250" y2="246"/><line x1="280" y1="240" x2="280" y2="246"/>
+          <line x1="310" y1="240" x2="310" y2="246"/><line x1="340" y1="240" x2="340" y2="246"/>
+        </g>
+        <!-- 電車 -->
+        <g class="a-ride">
+          <g stroke="#3E3A39" stroke-width="3" stroke-linejoin="round">
+            <path d="M0 214 H120 Q150 214 160 236 H0 Z" fill="#FFFCF6"/>
+            <rect x="0" y="228" width="160" height="5" fill="#A8D3E6" stroke="none"/>
+            <path d="M0 214 H120 Q150 214 160 236 H0 Z" fill="none"/>
+            <path d="M124 217 Q140 218 148 228 H124 Z" fill="#A8D3E6"/>
+            <rect x="14" y="219" width="16" height="8" rx="3" fill="#A8D3E6"/>
+            <rect x="40" y="219" width="16" height="8" rx="3" fill="#A8D3E6"/>
+            <rect x="66" y="219" width="16" height="8" rx="3" fill="#A8D3E6"/>
+            <rect x="92" y="219" width="16" height="8" rx="3" fill="#A8D3E6"/>
+            <circle cx="30" cy="238" r="4" fill="#3E3A39"/>
+            <circle cx="120" cy="238" r="4" fill="#3E3A39"/>
+          </g>
+        </g>
+      </svg>
+
+    </div>
+    <div class="hero-body">
+      <span class="hero-tag" id="hero-tag">我的旅程</span>
+      <h1 id="hero-title">我的旅行</h1>
+      <p class="sub" id="hero-dest"></p>
+      <p class="date" id="hero-date"></p>
+      <div class="count" id="count" aria-live="polite">
+        <div><b id="cd-d">--</b><span>天</span></div>
+        <div><b id="cd-h">--</b><span>時</span></div>
+        <div><b id="cd-m">--</b><span>分</span></div>
+        <div><b id="cd-s">--</b><span>秒</span></div>
+      </div>
+      <p class="count-note" id="count-note"></p>
+      <p class="weather" id="hero-note"></p>
+      <button class="edit-btn big" type="button" data-act="edit-trip">✎ 編輯旅程資訊</button>
+      <div class="share-card">
+        <p>填好後產生分享連結，傳給同伴。對方打開就能看到你填的行程，不用登入。</p>
+        <div class="row">
+          <button type="button" data-act="share">產生分享連結</button>
+        </div>
+        <input type="text" id="share-url" readonly hidden aria-label="分享連結">
+        <p class="share-msg" id="share-msg" role="status"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============ 航班 ============ -->
+<section id="flight">
+  <h2 class="sec-title">
+    <span class="badge" style="background:var(--water)" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24"><path d="M2.5 13.5 L21 7 Q23 6.6 22.4 8.6 L9 17 L6 16 L8 13 Z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2.2" stroke-linejoin="round"/></svg>
+    </span>
+    航班資訊
+  </h2>
+  <div class="flights" id="flights"></div>
+  <button class="add-btn" type="button" data-act="add-flight">＋ 新增航班</button>
+</section>
+
+<!-- ============ 每日行程 ============ -->
+<section id="plan">
+  <h2 class="sec-title">
+    <span class="badge" style="background:var(--coral)" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24"><rect x="3" y="5" width="18" height="16" rx="4" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2.2"/><path d="M3 10 H21 M8 3 V7 M16 3 V7" stroke="#3E3A39" stroke-width="2.2" stroke-linecap="round"/></svg>
+    </span>
+    每日行程
+  </h2>
+  <div class="days" role="tablist" aria-label="選擇日期" id="days"></div>
+  <div class="day-panel" role="tabpanel" id="day-panel" aria-live="polite"></div>
+  <div class="legend" aria-label="交通標籤說明">
+    <span class="tag plane">飛機</span><span class="tag train">電車</span><span class="tag metro">地鐵</span>
+    <span class="tag bus">巴士</span><span class="tag walk">步行</span><span class="tag taxi">計程車</span>
+    <span class="must-badge">★ 必去</span>
+  </div>
+</section>
+
+<!-- ============ 待辦＋住宿 ============ -->
+<section id="todo">
+  <h2 class="sec-title">
+    <span class="badge" style="background:var(--yellow)" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24"><rect x="4" y="3" width="16" height="19" rx="4" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2.2"/><path d="M8 9 L10 11 L14 7 M8 16 H16" stroke="#3E3A39" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" fill="none"/></svg>
+    </span>
+    待辦清單
+  </h2>
+  <div class="card">
+    <div class="progress"><div class="bar"><i id="bar-todo"></i></div><span id="num-todo">0/0</span></div>
+    <div id="list-todo"></div>
+  </div>
+
+  <h3 class="sub-title" id="stay">住宿資訊</h3>
+  <div class="hotels" id="hotels"></div>
+  <button class="add-btn" type="button" data-act="add-hotel">＋ 新增住宿</button>
+</section>
+
+<!-- ============ 出發前 ============ -->
+<section id="before">
+  <h2 class="sec-title">
+    <span class="badge" style="background:var(--bamboo)" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24"><rect x="3" y="6" width="18" height="13" rx="3" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2.2"/><circle cx="12" cy="12.5" r="3" fill="#F2A497" stroke="#3E3A39" stroke-width="2"/><path d="M7 6 V4 H17 V6" stroke="#3E3A39" stroke-width="2.2" fill="none" stroke-linejoin="round"/></svg>
+    </span>
+    出發前清單
+  </h2>
+  <div class="card">
+    <div class="progress"><div class="bar"><i id="bar-before"></i></div><span id="num-before">0/0</span></div>
+    <div id="list-before"></div>
+  </div>
+</section>
+
+<!-- ============ 行李 ============ -->
+<section id="pack">
+  <h2 class="sec-title">
+    <span class="badge" style="background:var(--coral)" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24"><rect x="4" y="7" width="16" height="13" rx="3" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2.2"/><path d="M9 7 V4.5 H15 V7 M4 12 H20" stroke="#3E3A39" stroke-width="2.2" fill="none" stroke-linejoin="round"/></svg>
+    </span>
+    行李清單
+  </h2>
+  <div class="card">
+    <div class="progress"><div class="bar"><i id="bar-pack"></i></div><span id="num-pack">0/0</span></div>
+    <div id="list-pack"></div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <svg width="120" height="60" viewBox="0 0 120 60" aria-hidden="true">
+    <g class="a-bob">
+      <rect x="34" y="18" width="52" height="36" rx="9" fill="#F2A497" stroke="#3E3A39" stroke-width="3"/>
+      <path d="M48 18 V10 H72 V18" fill="none" stroke="#3E3A39" stroke-width="3" stroke-linejoin="round"/>
+      <rect x="34" y="31" width="52" height="7" fill="#F6D27A" stroke="#3E3A39" stroke-width="3"/>
+      <circle cx="52" cy="46" r="2" fill="#3E3A39"/><circle cx="68" cy="46" r="2" fill="#3E3A39"/>
+      <path d="M56 49 Q60 52 64 49" fill="none" stroke="#3E3A39" stroke-width="2.2" stroke-linecap="round"/>
+    </g>
+  </svg>
+  <p>填寫的內容和打勾紀錄存在這台裝置的瀏覽器裡。<br>行程改了以後，要重新產生分享連結傳給同伴。</p>
+  <div class="tools">
+    <button type="button" data-act="export">匯出備份</button>
+    <label>匯入備份<input type="file" id="import-file" accept="application/json,.json"></label>
+    <button type="button" data-act="reset">清空全部</button>
+  </div>
+  <button class="motion-toggle" id="motion-toggle" type="button" aria-pressed="false">減少動態效果：關</button>
+</footer>
+
+<dialog id="editor" aria-labelledby="ed-title">
+  <form method="dialog" id="ed-form" novalidate>
+    <div class="ed-head" id="ed-title">編輯</div>
+    <div class="ed-body" id="ed-body"></div>
+    <div class="ed-foot">
+      <button type="button" class="del" id="ed-del">刪除</button>
+      <button type="button" id="ed-cancel">取消</button>
+      <button type="submit" class="save">儲存</button>
+    </div>
+  </form>
+</dialog>
+
+<script>
+/* ===================== 資料與儲存 ===================== */
+const STORE = "trip-planner-v1";
+const TAG = {plane:"飛機", train:"電車", metro:"地鐵", bus:"巴士", walk:"步行", taxi:"計程車"};
+const PACK_GROUPS = [
+  {k:"doc", l:"證件與錢", dot:"var(--coral)"},
+  {k:"cloth", l:"衣物", dot:"var(--water)"},
+  {k:"wash", l:"盥洗保養", dot:"var(--bamboo)"},
+  {k:"tech", l:"電子用品", dot:"var(--yellow)"},
+  {k:"other", l:"藥品與其他", dot:"var(--coral)"}
+];
+const ART_OPTIONS = [
+  {v:"torii", l:"鳥居"}, {v:"pagoda", l:"五重塔"}, {v:"bamboo", l:"竹林"},
+  {v:"deer", l:"小鹿"}, {v:"castle", l:"城堡"}, {v:"house", l:"町家"}, {v:"tower", l:"城市"}
+];
+const WEEK = "日一二三四五六";
+
+function blank(){
+  return {trip:{title:"",dest:"",start:"",end:"",depart:"",note:""},
+          flights:[], days:[], hotels:[],
+          lists:{todo:[], before:[], pack:[]}};
+}
+function normalize(d){
+  const b = blank();
+  if(!d || typeof d !== "object") return b;
+  b.trip = Object.assign(b.trip, d.trip || {});
+  ["flights","days","hotels"].forEach(k=>{ if(Array.isArray(d[k])) b[k] = d[k]; });
+  b.days.forEach(day=>{ if(!Array.isArray(day.items)) day.items = []; });
+  if(d.lists) ["todo","before","pack"].forEach(k=>{ if(Array.isArray(d.lists[k])) b.lists[k] = d.lists[k]; });
+  return b;
+}
+let data = blank();
+try{ data = normalize(JSON.parse(localStorage.getItem(STORE) || "null")); }catch(e){ data = blank(); }
+let previewMode = false;   // 正在看分享連結裡的行程，還沒存
+function save(){
+  if(previewMode) return;
+  try{ localStorage.setItem(STORE, JSON.stringify(data)); }catch(e){}
+}
+
+/* ---------- 分享連結：把行程壓縮後放進網址 # 後面 ---------- */
+function b64urlFromBytes(bytes){
+  let s = ""; for(let i=0;i<bytes.length;i+=0x8000) s += String.fromCharCode.apply(null, bytes.subarray(i,i+0x8000));
+  return btoa(s).replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+}
+function bytesFromB64url(str){
+  const b = atob(str.replace(/-/g,"+").replace(/_/g,"/"));
+  const out = new Uint8Array(b.length); for(let i=0;i<b.length;i++) out[i] = b.charCodeAt(i); return out;
+}
+async function encodeTrip(obj){
+  const raw = new TextEncoder().encode(JSON.stringify(obj));
+  if(window.CompressionStream){
+    const buf = await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream("deflate-raw"))).arrayBuffer();
+    return "z" + b64urlFromBytes(new Uint8Array(buf));
+  }
+  return "j" + b64urlFromBytes(raw);
+}
+async function decodeTrip(code){
+  const kind = code[0], bytes = bytesFromB64url(code.slice(1));
+  let text;
+  if(kind === "z"){
+    const buf = await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream("deflate-raw"))).arrayBuffer();
+    text = new TextDecoder().decode(buf);
+  }else text = new TextDecoder().decode(bytes);
+  return normalize(JSON.parse(text));
+}
+function shareMsg(t){ document.getElementById("share-msg").textContent = t; }
+
+const uid = () => Math.random().toString(36).slice(2,10);
+const esc = s => String(s == null ? "" : s).replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+const dash = s => s ? esc(s) : "—";
+function parseDate(s){ const m = /^(\d{4})-(\d{2})-(\d{2})$/.exec(s||""); return m ? new Date(+m[1], +m[2]-1, +m[3]) : null; }
+function fmtMD(s){ const d = parseDate(s); return d ? `${d.getMonth()+1}/${d.getDate()}` : ""; }
+function fmtWeek(s){ const d = parseDate(s); return d ? "週" + WEEK[d.getDay()] : ""; }
+function fmtFull(s){ const d = parseDate(s); return d ? `${d.getFullYear()} / ${d.getMonth()+1} / ${d.getDate()}（${WEEK[d.getDay()]}）` : ""; }
+function addDays(s, n){ const d = parseDate(s); if(!d) return ""; d.setDate(d.getDate()+n); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`; }
+const byDate = (a,b) => (a.date||"9999").localeCompare(b.date||"9999");
+const byTime = (a,b) => (a.t||"99:99").localeCompare(b.t||"99:99");
+
+/* ===================== 小插圖 ===================== */
+const S = 'stroke="#3E3A39" stroke-width="3" stroke-linejoin="round" stroke-linecap="round"';
+const ART = {
+  torii:`<svg viewBox="0 0 64 64" aria-hidden="true"><g ${S}><rect x="16" y="22" width="6" height="34" fill="#F2A497"/><rect x="42" y="22" width="6" height="34" fill="#F2A497"/><rect x="12" y="30" width="40" height="5" fill="#F2A497"/><path d="M6 16 Q32 24 58 16 L56 24 Q32 29 8 24 Z" fill="#3E3A39"/></g><line x1="4" y1="57" x2="60" y2="57" ${S}/></svg>`,
+  pagoda:`<svg viewBox="0 0 64 64" aria-hidden="true"><g ${S}><line x1="32" y1="4" x2="32" y2="14"/><rect x="24" y="46" width="16" height="12" fill="#F2A497"/><rect x="25" y="32" width="14" height="10" fill="#F2A497"/><rect x="26" y="19" width="12" height="9" fill="#F2A497"/><path d="M14 48 Q20 47 22 42 H42 Q44 47 50 48 Z" fill="#3E3A39"/><path d="M16 34 Q22 33 24 28 H40 Q42 33 48 34 Z" fill="#3E3A39"/><path d="M18 21 Q24 20 26 14 H38 Q40 20 46 21 Z" fill="#3E3A39"/></g></svg>`,
+  bamboo:`<svg viewBox="0 0 64 64" aria-hidden="true"><g class="a-sway" style="transform-origin:50% 100%"><g ${S}><rect x="12" y="4" width="8" height="56" rx="3" fill="#B9DAA5"/><rect x="28" y="2" width="8" height="58" rx="3" fill="#B9DAA5"/><rect x="44" y="6" width="8" height="54" rx="3" fill="#B9DAA5"/><path d="M12 22 H20 M12 40 H20 M28 16 H36 M28 34 H36 M28 50 H36 M44 26 H52 M44 44 H52"/><path d="M36 24 Q44 18 46 12" fill="none"/><path d="M46 12 Q40 10 38 16 Z" fill="#B9DAA5"/></g></g></svg>`,
+  deer:`<svg viewBox="0 0 64 64" aria-hidden="true"><g ${S}><path d="M14 10 V18 M14 14 L10 10 M22 10 V18 M22 14 L26 10" fill="none"/><ellipse cx="38" cy="38" rx="18" ry="11" fill="#F6D27A"/><rect x="24" y="44" width="5" height="14" rx="2" fill="#F6D27A"/><rect x="46" y="44" width="5" height="14" rx="2" fill="#F6D27A"/><path d="M24 34 L18 24" fill="none"/><circle cx="18" cy="22" r="8" fill="#F6D27A"/></g><circle cx="16" cy="21" r="1.8" fill="#3E3A39"/><circle cx="14" cy="26" r="2.2" fill="#F2A497"/><circle cx="36" cy="34" r="2" fill="#FFFCF6"/><circle cx="44" cy="38" r="2" fill="#FFFCF6"/><circle cx="40" cy="42" r="1.6" fill="#FFFCF6"/></svg>`,
+  castle:`<svg viewBox="0 0 64 64" aria-hidden="true"><g ${S}><path d="M8 58 L14 44 H50 L56 58 Z" fill="#E8E2D6"/><rect x="18" y="34" width="28" height="10" fill="#FFFCF6"/><path d="M12 36 Q18 34 20 28 H44 Q46 34 52 36 Z" fill="#B9DAA5"/><rect x="22" y="20" width="20" height="8" fill="#FFFCF6"/><path d="M16 22 Q22 20 24 14 H40 Q42 20 48 22 Z" fill="#B9DAA5"/><path d="M24 14 L32 6 L40 14" fill="#B9DAA5"/></g><circle cx="32" cy="10" r="1.8" fill="#F6D27A"/><rect x="29" y="37" width="6" height="7" fill="#3E3A39"/></svg>`,
+  house:`<svg viewBox="0 0 72 72" aria-hidden="true"><g ${S}><path d="M10 34 L36 14 L62 34" fill="none"/><path d="M14 30 L36 14 L58 30 Z" fill="#3E3A39"/><rect x="18" y="30" width="36" height="28" fill="#FFFCF6"/><rect x="30" y="42" width="12" height="16" fill="#F2A497"/><rect x="21" y="35" width="7" height="7" fill="#F6D27A"/><rect x="44" y="35" width="7" height="7" fill="#F6D27A"/></g><g class="a-sway"><line x1="22" y1="30" x2="22" y2="34" stroke="#3E3A39" stroke-width="2.4"/></g><line x1="6" y1="58" x2="66" y2="58" ${S}/></svg>`,
+  tower:`<svg viewBox="0 0 72 72" aria-hidden="true"><g ${S}><rect x="16" y="22" width="22" height="36" fill="#FFFCF6"/><rect x="38" y="32" width="18" height="26" fill="#F6D27A"/><path d="M20 28 H34 M20 36 H34 M20 44 H34 M42 38 H52 M42 46 H52"/><circle cx="27" cy="14" r="6" fill="#F2A497"/></g><line x1="6" y1="58" x2="66" y2="58" ${S}/></svg>`
+};
+
+
+/* ===================== 編輯視窗 ===================== */
+const dlg = document.getElementById("editor");
+const edForm = document.getElementById("ed-form");
+const edBody = document.getElementById("ed-body");
+let edState = null;
+
+function fieldHTML(f, v){
+  const id = "f-" + f.k;
+  const half = f.half ? " half" : "";
+  const hint = f.hint ? `<span class="hint">${esc(f.hint)}</span>` : "";
+  if(f.type === "chips"){
+    const arr = Array.isArray(v) ? v : [];
+    return `<fieldset class="fld"><legend>${f.l}</legend><div class="chips">${
+      Object.entries(TAG).map(([k,l])=>`<label class="chip"><input type="checkbox" name="${f.k}" value="${k}" ${arr.includes(k)?"checked":""}><span class="tag ${k}">${l}</span></label>`).join("")
+    }</div></fieldset>`;
+  }
+  if(f.type === "check"){
+    return `<label class="fld-row"><input type="checkbox" name="${f.k}" ${v?"checked":""}><span>${f.l}</span></label>`;
+  }
+  if(f.type === "select"){
+    return `<label class="fld${half}" for="${id}">${f.l}<select id="${id}" name="${f.k}">${
+      f.options.map(o=>`<option value="${esc(o.v)}" ${o.v===v?"selected":""}>${esc(o.l)}</option>`).join("")
+    }</select>${hint}</label>`;
+  }
+  if(f.type === "textarea"){
+    return `<label class="fld" for="${id}">${f.l}<textarea id="${id}" name="${f.k}" placeholder="${esc(f.ph||"")}">${esc(v||"")}</textarea>${hint}</label>`;
+  }
+  return `<label class="fld${half}" for="${id}">${f.l}<input id="${id}" name="${f.k}" type="${f.type||"text"}" value="${esc(v||"")}" placeholder="${esc(f.ph||"")}" autocomplete="off">${hint}</label>`;
+}
+
+function openEditor(opts){
+  edState = opts;
+  document.getElementById("ed-title").textContent = opts.title;
+  edBody.innerHTML = opts.fields.map(f=>fieldHTML(f, (opts.values||{})[f.k])).join("");
+  document.getElementById("ed-del").hidden = !opts.onDelete;
+  if(dlg.showModal) dlg.showModal(); else dlg.setAttribute("open","");
+  const first = edBody.querySelector("input:not([type=checkbox]),select,textarea");
+  if(first && window.matchMedia("(pointer:fine)").matches) first.focus();
+}
+function closeEditor(){ if(dlg.close) dlg.close(); else dlg.removeAttribute("open"); edState = null; }
+
+edForm.addEventListener("submit", e=>{
+  e.preventDefault();
+  if(!edState) return;
+  const vals = {};
+  edState.fields.forEach(f=>{
+    if(f.type === "chips") vals[f.k] = [...edForm.querySelectorAll(`input[name="${f.k}"]:checked`)].map(x=>x.value);
+    else if(f.type === "check") vals[f.k] = edForm.querySelector(`[name="${f.k}"]`).checked;
+    else vals[f.k] = edForm.querySelector(`[name="${f.k}"]`).value.trim();
+  });
+  edState.onSave(vals);
+  save(); renderAll(); closeEditor();
+});
+document.getElementById("ed-cancel").addEventListener("click", closeEditor);
+document.getElementById("ed-del").addEventListener("click", ()=>{
+  if(!edState || !edState.onDelete) return;
+  if(!confirm("確定要刪除嗎？")) return;
+  edState.onDelete(); save(); renderAll(); closeEditor();
+});
+dlg.addEventListener("click", e=>{ if(e.target === dlg) closeEditor(); });
+
+/* ===================== 欄位設定 ===================== */
+const F_TRIP = [
+  {k:"title", l:"旅程名稱", ph:"例：京都賞楓小旅行"},
+  {k:"dest", l:"目的地", ph:"例：京都・大阪"},
+  {k:"start", l:"出發日", type:"date", half:true},
+  {k:"end", l:"回國日", type:"date", half:true},
+  {k:"depart", l:"起飛時間（倒數用）", type:"datetime-local", hint:"填入第一班飛機的起飛時間，首頁會開始倒數"},
+  {k:"note", l:"小提醒", type:"textarea", ph:"例：當地氣溫、記得帶的東西"}
+];
+const F_FLIGHT = [
+  {k:"kind", l:"類型", type:"select", half:true, options:[{v:"去程",l:"去程"},{v:"回程",l:"回程"},{v:"轉機",l:"轉機"},{v:"國內線",l:"國內線"}]},
+  {k:"date", l:"日期", type:"date", half:true},
+  {k:"air", l:"航空公司", half:true, ph:"例：中華航空"},
+  {k:"no", l:"航班編號", half:true, ph:"例：CI 152"},
+  {k:"fromCode", l:"出發機場代碼", half:true, ph:"TPE"},
+  {k:"fromTime", l:"起飛時間", type:"time", half:true},
+  {k:"fromCity", l:"出發航廈", ph:"例：桃園 第一航廈"},
+  {k:"toCode", l:"抵達機場代碼", half:true, ph:"KIX"},
+  {k:"toTime", l:"抵達時間", type:"time", half:true},
+  {k:"toCity", l:"抵達航廈", ph:"例：關西 第一航廈"},
+  {k:"dur", l:"飛行時間", half:true, ph:"2 小時 40 分"},
+  {k:"seat", l:"座位", half:true, ph:"34A"},
+  {k:"bag", l:"託運行李", half:true, ph:"23kg × 1"},
+  {k:"code", l:"訂位代號", half:true, ph:"ABC123"}
+];
+const F_DAY = [
+  {k:"date", l:"日期", type:"date", half:true},
+  {k:"art", l:"插圖", type:"select", half:true, options:ART_OPTIONS},
+  {k:"title", l:"這天的主題", ph:"例：東山散步日"},
+  {k:"area", l:"區域", ph:"例：清水寺・祇園"}
+];
+const F_ITEM = [
+  {k:"t", l:"時間", type:"time", half:true},
+  {k:"must", l:"★ 標為必去", type:"check"},
+  {k:"h", l:"行程名稱", ph:"例：清水寺"},
+  {k:"p", l:"備註", type:"textarea", ph:"例：開門後人少，清水舞台拍照"},
+  {k:"tags", l:"交通方式（可複選）", type:"chips"}
+];
+const F_HOTEL = [
+  {k:"name", l:"飯店名稱"},
+  {k:"in", l:"入住日", type:"date", half:true},
+  {k:"out", l:"退房日", type:"date", half:true},
+  {k:"inTime", l:"入住時間", half:true, ph:"15:00 後"},
+  {k:"outTime", l:"退房時間", half:true, ph:"10:00 前"},
+  {k:"addr", l:"地址"},
+  {k:"station", l:"最近車站", ph:"例：京都站 步行 6 分"},
+  {k:"room", l:"房型", half:true, ph:"雙人房・含早"},
+  {k:"code", l:"訂位代號", half:true},
+  {k:"phone", l:"電話", type:"text"},
+  {k:"map", l:"地圖搜尋關鍵字", hint:"留空會用飯店名稱＋地址搜尋"}
+];
+const F_CHECK = [
+  {k:"txt", l:"項目"},
+  {k:"sub", l:"補充說明"}
+];
+
+/* ===================== 首頁 ===================== */
+function renderHero(){
+  const t = data.trip;
+  document.getElementById("hero-title").textContent = t.title || "我的旅行";
+  document.getElementById("hero-dest").textContent = t.dest || "";
+  const s = parseDate(t.start), e = parseDate(t.end);
+  let tag = "我的旅程";
+  if(s && e && e >= s){
+    const n = Math.round((e - s) / 864e5) + 1;
+    tag = n === 1 ? "1 日遊" : `${n} 天 ${n-1} 夜`;
+  }
+  document.getElementById("hero-tag").textContent = tag;
+  document.getElementById("hero-date").textContent =
+    s ? (fmtFull(t.start) + (e ? " → " + fmtFull(t.end).replace(/^\d{4} \/ /,"") : "")) : "還沒設定日期";
+  const note = document.getElementById("hero-note");
+  note.textContent = t.note || "";
+  note.hidden = !t.note;
+  tickCount();
+}
+
+/* ===================== 航班 ===================== */
+function renderFlights(){
+  const el = document.getElementById("flights");
+  if(!data.flights.length){
+    el.innerHTML = `<div class="empty">還沒有航班<small>按下方「＋ 新增航班」填入去程和回程</small></div>`;
+    return;
+  }
+  const list = [...data.flights].sort(byDate);
+  const color = k => k==="去程" ? "var(--yellow)" : k==="回程" ? "var(--bamboo)" : "var(--water)";
+  el.innerHTML = list.map(f=>`
+  <article class="card flight">
+    <div class="head">
+      <span class="pill" style="background:${color(f.kind)}">${esc(f.kind||"航班")}${f.date?"・"+fmtMD(f.date)+"（"+fmtWeek(f.date).slice(1)+"）":""}</span>
+      <span class="right"><span>${esc([f.air,f.no].filter(Boolean).join(" "))}</span><button class="edit-btn" type="button" data-act="edit-flight" data-id="${f.id}" aria-label="編輯航班">✎</button></span>
+    </div>
+    <div class="route">
+      <div class="end"><div class="code">${dash(f.fromCode)}</div><div class="time">${dash(f.fromTime)}</div><div class="city">${esc(f.fromCity)}</div></div>
+      <div class="mid" aria-hidden="true">
+        <svg viewBox="0 0 110 50">
+          <path d="M6 40 Q55 2 104 40" fill="none" stroke="#3E3A39" stroke-width="2.5" stroke-dasharray="5 6" stroke-linecap="round"/>
+          <circle cx="6" cy="40" r="4" fill="#F2A497" stroke="#3E3A39" stroke-width="2.5"/>
+          <circle cx="104" cy="40" r="4" fill="#A8D3E6" stroke="#3E3A39" stroke-width="2.5"/>
+          <g class="a-fly"><path d="M38 22 L74 12 Q80 11 78 16 L52 30 L46 28 L48 24 Z M54 18 L50 8 L56 8 L64 15 Z" fill="#FFFCF6" stroke="#3E3A39" stroke-width="2.4" stroke-linejoin="round"/></g>
+        </svg>
+        <div style="text-align:center;font-size:12px">${esc(f.dur)}</div>
+      </div>
+      <div class="end"><div class="code">${dash(f.toCode)}</div><div class="time">${dash(f.toTime)}</div><div class="city">${esc(f.toCity)}</div></div>
+    </div>
+    <div class="meta">
+      <div>座位<b>${dash(f.seat)}</b></div>
+      <div>託運行李<b>${dash(f.bag)}</b></div>
+      <div>訂位代號<b>${dash(f.code)}</b></div>
+    </div>
+  </article>`).join("");
+}
+
+/* ===================== 每日行程 ===================== */
+const daysEl = document.getElementById("days");
+const panel = document.getElementById("day-panel");
+let curDay = null;
+try{ curDay = localStorage.getItem(STORE+"-day"); }catch(e){}
+
+function sortedDays(){ return [...data.days].sort(byDate); }
+function renderDays(animate){
+  const days = sortedDays();
+  if(!days.find(d=>d.id===curDay)){
+    const today = new Date(); const ts = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+    const hit = days.find(d=>d.date===ts);
+    curDay = hit ? hit.id : (days[0] ? days[0].id : null);
+  }
+  daysEl.innerHTML = days.map((d,i)=>`
+    <button class="day-btn" role="tab" id="tab-${d.id}" aria-controls="day-panel" aria-selected="${d.id===curDay}" data-day="${d.id}" type="button">
+      <small>Day ${i+1}</small><b>${d.date?fmtMD(d.date):"未定"}</b><small>${fmtWeek(d.date)||"&nbsp;"}</small>
+    </button>`).join("") +
+    `<button class="day-btn plus" type="button" data-act="add-day" aria-label="新增一天">＋</button>`;
+
+  if(!days.length){
+    panel.innerHTML = `<div class="empty">還沒有每日行程<small>按上方「＋」新增第一天${data.trip.start?"":"，先在首頁設定出發日會自動帶入日期"}</small></div>`;
+    return;
+  }
+  const idx = days.findIndex(d=>d.id===curDay);
+  const d = days[idx];
+  panel.setAttribute("aria-labelledby", "tab-"+d.id);
+  const items = [...d.items].sort(byTime);
+  panel.innerHTML = `
+    <div class="banner${animate?" bounce-one":""}">${ART[d.art] || ART.torii}
+      <div class="grow"><p>Day ${idx+1}${d.date?"・"+fmtMD(d.date)+"（"+fmtWeek(d.date).slice(1)+"）":""}${d.area?"・"+esc(d.area):""}</p><h3>${esc(d.title) || "這天的主題"}</h3></div>
+      <div class="acts"><button class="edit-btn" type="button" data-act="edit-day" data-id="${d.id}">✎ 這天</button></div>
+    </div>
+    ${items.length ? `<ol class="timeline${animate?" bounce":""}">
+      ${items.map(it=>`
+        <li class="tl${it.must?" must":""}">
+          <button class="box" type="button" data-act="edit-item" data-id="${it.id}">
+            <span class="top">
+              <span class="t">${esc(it.t) || "--:--"}</span>
+              ${(it.tags||[]).map(t=>`<span class="tag ${t}">${TAG[t]||""}</span>`).join("")}
+              ${it.must?`<span class="must-badge">★ 必去</span>`:""}
+              <span class="edit-hint">✎</span>
+            </span>
+            <span class="h4">${esc(it.h) || "（未命名）"}</span>
+            ${it.p?`<span class="pp">${esc(it.p)}</span>`:""}
+          </button>
+        </li>`).join("")}
+    </ol>` : `<div class="empty">這天還沒有行程</div>`}
+    <button class="add-btn" type="button" data-act="add-item">＋ 新增行程</button>`;
+}
+function selectDay(id){
+  curDay = id;
+  try{ localStorage.setItem(STORE+"-day", id); }catch(e){}
+  renderDays(true);
+  const b = document.getElementById("tab-"+id);
+  if(b) b.scrollIntoView({block:"nearest", inline:"center", behavior: reduced() ? "auto" : "smooth"});
+}
+daysEl.addEventListener("keydown", e=>{
+  if(e.key!=="ArrowRight" && e.key!=="ArrowLeft") return;
+  const days = sortedDays(); const cur = days.findIndex(d=>d.id===document.activeElement.dataset.day);
+  if(cur<0) return;
+  const n = days[(cur + (e.key==="ArrowRight"?1:-1) + days.length) % days.length];
+  selectDay(n.id); document.getElementById("tab-"+n.id).focus();
+});
+
+/* ===================== 住宿 ===================== */
+function renderHotels(){
+  const el = document.getElementById("hotels");
+  if(!data.hotels.length){
+    el.innerHTML = `<div class="empty">還沒有住宿資料<small>按下方「＋ 新增住宿」</small></div>`;
+    return;
+  }
+  const colors = ["var(--coral)","var(--water)","var(--bamboo)","var(--yellow)"];
+  const list = [...data.hotels].sort((a,b)=>(a.in||"9999").localeCompare(b.in||"9999"));
+  el.innerHTML = list.map((h,i)=>{
+    const a = parseDate(h.in), b = parseDate(h.out);
+    const nights = a && b && b > a ? Math.round((b-a)/864e5) + " 晚" : "住宿";
+    const rows = [
+      ["日期", h.in ? `${fmtMD(h.in)}（${fmtWeek(h.in).slice(1)}）→ ${h.out?fmtMD(h.out)+"（"+fmtWeek(h.out).slice(1)+"）":"—"}` : ""],
+      ["入住", h.inTime], ["退房", h.outTime], ["地址", h.addr], ["最近車站", h.station],
+      ["房型", h.room], ["訂位代號", h.code], ["電話", h.phone]
+    ].filter(r=>r[1]);
+    const q = h.map || [h.name, h.addr].filter(Boolean).join(" ");
+    return `
+    <article class="card hotel">
+      <div class="pic">${ART[i%2 ? "tower" : "house"]}</div>
+      <div>
+        <span class="pill" style="background:${colors[i%colors.length]}">${nights}</span>
+        <h3 style="margin-top:6px">${esc(h.name) || "（未命名住宿）"}</h3>
+        ${rows.length ? `<dl>${rows.map(r=>`<dt>${r[0]}</dt><dd>${esc(r[1])}</dd>`).join("")}</dl>` : ""}
+        ${q ? `<a class="btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}" target="_blank" rel="noopener">開啟地圖</a>` : ""}
+        <button class="edit-btn" type="button" data-act="edit-hotel" data-id="${h.id}" style="margin-top:10px">✎ 編輯</button>
+      </div>
+    </article>`;
+  }).join("");
+}
+
+/* ===================== 清單 ===================== */
+const tick = `<svg width="16" height="16" viewBox="0 0 16 16" aria-hidden="true"><path d="M3 8.5 L6.5 12 L13 4.5" fill="none" stroke="#3E3A39" stroke-width="2.8" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
+function checkItem(list, it){
+  return `<li><label class="check"><input type="checkbox" data-list="${list}" data-id="${it.id}" ${it.done?"checked":""}><span class="box">${tick}</span><span class="txt">${esc(it.txt)}${it.sub?`<small>${esc(it.sub)}</small>`:""}</span></label><button class="edit-btn" type="button" data-act="edit-check" data-list="${list}" data-id="${it.id}" aria-label="編輯「${esc(it.txt)}」">✎</button></li>`;
+}
+function addRow(list, group, ph){
+  return `<form class="add-row" data-list="${list}" data-group="${group||""}"><input type="text" placeholder="${ph}" aria-label="${ph}" enterkeyhint="done"><button type="submit">加入</button></form>`;
+}
+function renderLists(){
+  document.getElementById("list-todo").innerHTML =
+    (data.lists.todo.length ? `<ul class="list">${data.lists.todo.map(it=>checkItem("todo",it)).join("")}</ul>` : `<p class="empty-line">還沒有待辦事項，在下方輸入後按「加入」。</p>`) +
+    addRow("todo","","新增待辦，例：預約餐廳");
+  document.getElementById("list-before").innerHTML =
+    (data.lists.before.length ? `<ul class="list">${data.lists.before.map(it=>checkItem("before",it)).join("")}</ul>` : `<p class="empty-line">還沒有項目，在下方輸入後按「加入」。</p>`) +
+    addRow("before","","新增項目，例：確認護照效期");
+  document.getElementById("list-pack").innerHTML = PACK_GROUPS.map(g=>{
+    const items = data.lists.pack.filter(x=>(x.group||"other")===g.k);
+    return `<h3 class="group-title" style="--dot:${g.dot}">${g.l}</h3>
+      ${items.length ? `<ul class="list">${items.map(it=>checkItem("pack",it)).join("")}</ul>` : ""}
+      ${addRow("pack", g.k, "新增到「"+g.l+"」")}`;
+  }).join("");
+  updateProgress();
+}
+function updateProgress(){
+  ["todo","before","pack"].forEach(k=>{
+    const arr = data.lists[k];
+    const done = arr.filter(x=>x.done).length;
+    const bar = document.getElementById("bar-"+k);
+    bar.style.width = arr.length ? (done/arr.length*100)+"%" : "0%";
+    bar.classList.toggle("zero", done===0);
+    document.getElementById("num-"+k).textContent = arr.length && done===arr.length ? `全部完成 ${done}/${arr.length}` : `${done}/${arr.length}`;
+  });
+}
+document.addEventListener("change", e=>{
+  const t = e.target;
+  if(!t.dataset || !t.dataset.list || t.type !== "checkbox") return;
+  const it = data.lists[t.dataset.list].find(x=>x.id===t.dataset.id);
+  if(it){ it.done = t.checked; save(); updateProgress(); }
+});
+document.addEventListener("submit", e=>{
+  const f = e.target.closest(".add-row"); if(!f) return;
+  e.preventDefault();
+  const input = f.querySelector("input"); const txt = input.value.trim();
+  if(!txt){ input.focus(); return; }
+  const item = {id:uid(), txt, sub:"", done:false};
+  if(f.dataset.list === "pack") item.group = f.dataset.group;
+  data.lists[f.dataset.list].push(item);
+  save(); renderLists();
+  const again = document.querySelector(`.add-row[data-list="${f.dataset.list}"][data-group="${f.dataset.group}"] input`);
+  if(again) again.focus();
+});
+
+/* ===================== 按鈕動作 ===================== */
+const find = (arr, id) => arr.find(x=>x.id===id);
+const remove = (arr, id) => { const i = arr.findIndex(x=>x.id===id); if(i>=0) arr.splice(i,1); };
+
+document.addEventListener("click", e=>{
+  const dayBtn = e.target.closest("[data-day]");
+  if(dayBtn){ selectDay(dayBtn.dataset.day); return; }
+  const b = e.target.closest("[data-act]"); if(!b) return;
+  const act = b.dataset.act, id = b.dataset.id;
+  const day = find(data.days, curDay);
+
+  if(act === "edit-trip") openEditor({title:"旅程資訊", fields:F_TRIP, values:data.trip,
+    onSave:v=>{ Object.assign(data.trip, v); }});
+
+  else if(act === "add-flight"){
+    const kind = data.flights.length === 0 ? "去程" : data.flights.length === 1 ? "回程" : "轉機";
+    openEditor({title:"新增航班", fields:F_FLIGHT, values:{kind, date: kind==="去程" ? data.trip.start : kind==="回程" ? data.trip.end : ""},
+      onSave:v=>{ data.flights.push(Object.assign({id:uid()}, v)); }});
+  }
+  else if(act === "edit-flight"){ const f = find(data.flights, id);
+    openEditor({title:"編輯航班", fields:F_FLIGHT, values:f, onSave:v=>Object.assign(f,v), onDelete:()=>remove(data.flights,id)}); }
+
+  else if(act === "add-day"){
+    const days = sortedDays(); const last = days.filter(d=>d.date).pop();
+    const date = last ? addDays(last.date, 1) : (data.trip.start || "");
+    openEditor({title:"新增一天", fields:F_DAY, values:{date, art:ART_OPTIONS[days.length % 5].v},
+      onSave:v=>{ const nd = Object.assign({id:uid(), items:[]}, v); data.days.push(nd); curDay = nd.id; }});
+  }
+  else if(act === "edit-day" && day){
+    openEditor({title:"編輯這一天", fields:F_DAY, values:day, onSave:v=>Object.assign(day,v),
+      onDelete:()=>{ remove(data.days, day.id); curDay = null; }});
+  }
+  else if(act === "add-item" && day){
+    openEditor({title:"新增行程", fields:F_ITEM, values:{tags:[]},
+      onSave:v=>{ day.items.push(Object.assign({id:uid()}, v)); }});
+  }
+  else if(act === "edit-item" && day){ const it = find(day.items, id);
+    openEditor({title:"編輯行程", fields:F_ITEM, values:it, onSave:v=>Object.assign(it,v), onDelete:()=>remove(day.items,id)}); }
+
+  else if(act === "add-hotel") openEditor({title:"新增住宿", fields:F_HOTEL, values:{},
+    onSave:v=>{ data.hotels.push(Object.assign({id:uid()}, v)); }});
+  else if(act === "edit-hotel"){ const h = find(data.hotels, id);
+    openEditor({title:"編輯住宿", fields:F_HOTEL, values:h, onSave:v=>Object.assign(h,v), onDelete:()=>remove(data.hotels,id)}); }
+
+  else if(act === "edit-check"){ const arr = data.lists[b.dataset.list]; const it = find(arr, id);
+    openEditor({title:"編輯項目", fields:F_CHECK, values:it, onSave:v=>{ if(v.txt) Object.assign(it,v); }, onDelete:()=>remove(arr,id)}); }
+
+  else if(act === "export"){
+    const blob = new Blob([JSON.stringify(data, null, 2)], {type:"application/json"});
+    const a = document.createElement("a");
+    a.href = URL.createObjectURL(blob);
+    a.download = `旅程備份-${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(()=>URL.revokeObjectURL(a.href), 1000);
+  }
+  else if(act === "share"){
+    (async ()=>{
+      try{
+        const code = await encodeTrip(data);
+        const url = location.href.split("#")[0] + "#trip=" + code;
+        const box = document.getElementById("share-url");
+        box.value = url; box.hidden = false;
+        let done = false;
+        if(navigator.share){
+          try{ await navigator.share({title: data.trip.title || "我的旅行", text: "我們的旅行行程", url}); done = true; shareMsg("已開啟分享。"); }
+          catch(e){ if(e && e.name === "AbortError"){ shareMsg(""); return; } }
+        }
+        if(!done){
+          try{ await navigator.clipboard.writeText(url); shareMsg("連結已複製，貼到 LINE 傳給同伴就好。"); }
+          catch(e){ box.select(); shareMsg("請長按上方連結複製。"); }
+        }
+      }catch(e){ shareMsg("產生連結失敗，請再試一次。"); }
+    })();
+  }
+  else if(act === "reset"){
+    if(confirm("確定要清空所有行程、航班、住宿和清單嗎？建議先匯出備份。")){
+      data = blank(); curDay = null; save(); renderAll();
+    }
+  }
+});
+
+document.getElementById("import-file").addEventListener("change", e=>{
+  const file = e.target.files[0]; if(!file) return;
+  const r = new FileReader();
+  r.onload = () => {
+    try{
+      const d = normalize(JSON.parse(r.result));
+      if(confirm("匯入後會取代目前的內容，確定嗎？")){ data = d; curDay = null; save(); renderAll(); }
+    }catch(err){ alert("檔案格式不對，請選擇從這個頁面匯出的備份檔。"); }
+    e.target.value = "";
+  };
+  r.readAsText(file);
+});
+
+/* ===================== 倒數 ===================== */
+const pad = n => String(n).padStart(2,"0");
+function tickCount(){
+  const note = document.getElementById("count-note");
+  const set = (d,h,m,s) => { document.getElementById("cd-d").textContent=d; document.getElementById("cd-h").textContent=h; document.getElementById("cd-m").textContent=m; document.getElementById("cd-s").textContent=s; };
+  const t = data.trip;
+  const target = t.depart ? new Date(t.depart) : (t.start ? parseDate(t.start) : null);
+  if(!target || isNaN(target)){ set("--","--","--","--"); note.textContent = "按「編輯旅程資訊」填入起飛時間，就會開始倒數"; return; }
+  const now = new Date();
+  let ms = target - now;
+  if(ms <= 0){
+    set("00","00","00","00");
+    const end = parseDate(t.end); if(end) end.setHours(23,59,59);
+    note.textContent = end && now <= end ? "旅程進行中，玩得開心！" : "旅程結束，歡迎回家！";
+    return;
+  }
+  const d = Math.floor(ms/864e5); ms -= d*864e5;
+  const h = Math.floor(ms/36e5);  ms -= h*36e5;
+  const m = Math.floor(ms/6e4);   ms -= m*6e4;
+  set(d, pad(h), pad(m), pad(Math.floor(ms/1e3)));
+  note.textContent = t.depart ? "距離起飛還有" : "距離出發日還有";
+}
+setInterval(tickCount, 1000);
+
+/* ===================== 選單高亮 ===================== */
+const links = [...document.querySelectorAll(".nav a")];
+const secs = links.map(a=>document.querySelector(a.getAttribute("href")));
+if("IntersectionObserver" in window){
+  const io = new IntersectionObserver(entries=>{
+    entries.forEach(en=>{
+      if(en.isIntersecting){
+        const i = secs.indexOf(en.target);
+        links.forEach((a,j)=>a.classList.toggle("on", j===i));
+        links[i].scrollIntoView({block:"nearest", inline:"center", behavior:"auto"});
+      }
+    });
+  }, {rootMargin:"-45% 0px -50% 0px"});
+  secs.forEach(s=>io.observe(s));
+}
+
+/* ===================== 減少動態效果 ===================== */
+const mq = window.matchMedia ? window.matchMedia("(prefers-reduced-motion: reduce)") : null;
+const toggle = document.getElementById("motion-toggle");
+let manual = null;
+try{ manual = localStorage.getItem(STORE+"-motion"); }catch(e){}
+function reduced(){ return document.documentElement.classList.contains("reduce") || (mq && mq.matches); }
+function applyMotion(){
+  const on = manual === "reduce";
+  document.documentElement.classList.toggle("reduce", on);
+  const eff = reduced();
+  toggle.textContent = "減少動態效果：" + (eff ? "開" : "關") + (mq && mq.matches && !on ? "（跟隨系統）" : "");
+  toggle.setAttribute("aria-pressed", eff ? "true" : "false");
+}
+toggle.addEventListener("click", ()=>{
+  manual = manual === "reduce" ? "" : "reduce";
+  try{ localStorage.setItem(STORE+"-motion", manual); }catch(e){}
+  applyMotion();
+});
+if(mq && mq.addEventListener) mq.addEventListener("change", applyMotion);
+applyMotion();
+
+/* ===================== 開始 ===================== */
+function renderAll(){ renderHero(); renderFlights(); renderDays(false); renderHotels(); renderLists(); }
+renderAll();
+
+/* 打開分享連結時：先顯示分享的行程，讓對方決定要不要存 */
+(async function openShared(){
+  const m = /[#&]trip=([A-Za-z0-9_-]+)/.exec(location.hash);
+  if(!m) return;
+  try{
+    const shared = await decodeTrip(m[1]);
+    previewMode = true; data = shared; curDay = null; renderAll();
+    document.getElementById("share-banner").hidden = false;
+  }catch(e){ /* 連結壞了就照常顯示自己的資料 */ }
+})();
+const clearHash = () => { try{ history.replaceState(null, "", location.pathname + location.search); }catch(e){} };
+document.getElementById("share-keep").addEventListener("click", ()=>{
+  previewMode = false; save(); clearHash();
+  document.getElementById("share-banner").hidden = true;
+});
+document.getElementById("share-dismiss").addEventListener("click", ()=>{
+  document.getElementById("share-banner").hidden = true;
+});
+</script>
+</body>
+</html>
