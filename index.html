@@ -346,6 +346,7 @@ dialog form{display:flex;flex-direction:column;max-height:88vh}
 }
 .ed-foot .save{background:var(--bamboo);margin-left:auto}
 .ed-foot .del{background:var(--coral)}
+.hotel .hnote{margin-top:6px;font-size:14px;white-space:pre-line}
 .flight .fnote{margin-top:12px;border-top:2.5px dashed var(--ink);padding-top:10px;font-size:14px;white-space:pre-line}
 .share-card{margin-top:14px;border:var(--line);border-radius:var(--r-md);padding:12px;background:var(--sky);text-align:center}
 .share-card p{font-size:14px}
@@ -803,17 +804,11 @@ const F_ITEM = [
   {k:"tags", l:"交通方式（可複選）", type:"chips"}
 ];
 const F_HOTEL = [
-  {k:"name", l:"飯店名稱"},
+  {k:"name", l:"住哪裡", ph:"飯店或民宿名稱"},
   {k:"in", l:"入住日", type:"date", half:true},
   {k:"out", l:"退房日", type:"date", half:true},
-  {k:"inTime", l:"入住時間", half:true, ph:"15:00 後"},
-  {k:"outTime", l:"退房時間", half:true, ph:"10:00 前"},
-  {k:"addr", l:"地址"},
-  {k:"station", l:"最近車站", ph:"例：京都站 步行 6 分"},
-  {k:"room", l:"房型", half:true, ph:"雙人房・含早"},
-  {k:"code", l:"訂位代號", half:true},
-  {k:"phone", l:"電話", type:"text"},
-  {k:"map", l:"地圖搜尋關鍵字", hint:"留空會用飯店名稱＋地址搜尋"}
+  {k:"addr", l:"地址（選填）", hint:"填了地址，「開啟地圖」會找得更準"},
+  {k:"note", l:"備註（選填）", type:"textarea", ph:"房型、訂位代號、電話、入住時間，有需要再寫"}
 ];
 const F_CHECK = [
   {k:"txt", l:"項目"},
@@ -955,7 +950,8 @@ function renderHotels(){
     const nights = a && b && b > a ? Math.round((b-a)/864e5) + " 晚" : "住宿";
     const rows = [
       ["日期", h.in ? `${fmtMD(h.in)}（${fmtWeek(h.in).slice(1)}）→ ${h.out?fmtMD(h.out)+"（"+fmtWeek(h.out).slice(1)+"）":"—"}` : ""],
-      ["入住", h.inTime], ["退房", h.outTime], ["地址", h.addr], ["最近車站", h.station],
+      ["地址", h.addr],
+      ["入住", h.inTime], ["退房", h.outTime], ["最近車站", h.station],
       ["房型", h.room], ["訂位代號", h.code], ["電話", h.phone]
     ].filter(r=>r[1]);
     const q = h.map || [h.name, h.addr].filter(Boolean).join(" ");
@@ -966,6 +962,7 @@ function renderHotels(){
         <span class="pill" style="background:${colors[i%colors.length]}">${nights}</span>
         <h3 style="margin-top:6px">${esc(h.name) || "（未命名住宿）"}</h3>
         ${rows.length ? `<dl>${rows.map(r=>`<dt>${r[0]}</dt><dd>${esc(r[1])}</dd>`).join("")}</dl>` : ""}
+        ${h.note ? `<p class="hnote">${esc(h.note)}</p>` : ""}
         ${q ? `<a class="btn" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(q)}" target="_blank" rel="noopener">開啟地圖</a>` : ""}
         <button class="edit-btn" type="button" data-act="edit-hotel" data-id="${h.id}" style="margin-top:10px">✎ 編輯</button>
       </div>
